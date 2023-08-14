@@ -1,9 +1,6 @@
 from django.contrib import admin
 
-from .models import Category
-from .models import Topping
-from .models import Wrapper
-from .models import IceCream
+from .models import Category, Topping, Wrapper, IceCream
 
 
 class IceCreamAdmin(admin.ModelAdmin):
@@ -23,9 +20,27 @@ class IceCreamAdmin(admin.ModelAdmin):
     search_fields = ('title',)
     list_filter = ('category',)
     list_display_links = ('title',)
+    empty_value_display = 'Не задано'
+    filter_horizontal = ('toppings',)
 
 
-admin.site.register(Category)
 admin.site.register(Topping)
 admin.site.register(Wrapper)
 admin.site.register(IceCream, IceCreamAdmin)
+
+
+class IceCreamInline(admin.TabularInline):
+    model = IceCream
+    extra = 0
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    inlines = (
+        IceCreamInline,
+    )
+    list_display = (
+        'title',        
+    )
+
+
+admin.site.register(Category, CategoryAdmin)
